@@ -123,7 +123,7 @@
     }
     .question-text .qnum { color: #8ab3c7; font-weight: 400; min-width: 32px; }
 
-    /* rating 1-10 */
+    /* rating 1-10 with custom labels */
     .rating-group {
       display: flex;
       flex-wrap: wrap;
@@ -156,7 +156,19 @@
       box-shadow: 0 0 0 2px #5a8a9e;
       font-weight: 500;
     }
-    .rating-label { font-size: 14px; color: #888; margin: 0 2px; }
+    /* custom label style (min / max) */
+    .rating-label {
+      font-size: 14px;
+      color: #aaa;
+      margin: 0 4px;
+      background: #1a1a1a;
+      padding: 2px 10px;
+      border-radius: 30px;
+      border: 1px solid #3a3a3a;
+      white-space: nowrap;
+    }
+    .rating-label-min { color: #8ab3c7; }
+    .rating-label-max { color: #c7a88a; }
 
     /* intro inputs & select */
     .intro-input-group {
@@ -302,61 +314,151 @@
     <!-- ========== PAGE 1 · SLEEP ========== -->
     <div id="page-sleep" class="page">
       <h2><i class="fas fa-moon"></i> Sleep</h2>
-      <div class="question-block"><div class="question-text"><span class="qnum">1.</span> How much sleep do you usually get?</div><div class="rating-group" data-qid="1"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">2.</span> How much difficulty do you have falling asleep at the beginning of the night?</div><div class="rating-group" data-qid="2"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">3.</span> How would you rate your overall sleep quality over the past month?</div><div class="rating-group" data-qid="3"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">4.</span> How often do you wake up in the middle of the night and struggle to get back to sleep?</div><div class="rating-group" data-qid="4"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">5.</span> How sleepy or exhausted do you feel during the daytime hours?</div><div class="rating-group" data-qid="5"></div></div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">1.</span> How much sleep do you usually get?</div>
+        <div class="rating-group" data-qid="1" data-min="very little" data-max="a lot"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">2.</span> How much difficulty do you have falling asleep at the beginning of the night?</div>
+        <div class="rating-group" data-qid="2" data-min="no difficulty" data-max="extreme difficulty"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">3.</span> How would you rate your overall sleep quality over the past month?</div>
+        <div class="rating-group" data-qid="3" data-min="very poor" data-max="excellent"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">4.</span> How often do you wake up in the middle of the night and struggle to get back to sleep?</div>
+        <div class="rating-group" data-qid="4" data-min="never" data-max="always"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">5.</span> How sleepy or exhausted do you feel during the daytime hours?</div>
+        <div class="rating-group" data-qid="5" data-min="not at all" data-max="extremely"></div>
+      </div>
     </div>
 
     <!-- ========== PAGE 2 · WATER ========== -->
     <div id="page-water" class="page">
       <h2><i class="fas fa-tint"></i> Water Intake</h2>
-      <div class="question-block"><div class="question-text"><span class="qnum">6.</span> In the past month, how often have you felt physically dehydrated…</div><div class="rating-group" data-qid="6"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">7.</span> In the past month, how often have you drunk around 2 litres of water daily?</div><div class="rating-group" data-qid="7"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">8.</span> In the past month, how often has a lack of hydration made you feel irritable…</div><div class="rating-group" data-qid="8"></div></div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">6.</span> In the past month, how often have you felt physically dehydrated…</div>
+        <div class="rating-group" data-qid="6" data-min="never" data-max="very often"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">7.</span> In the past month, how often have you drunk around 2 litres of water daily?</div>
+        <div class="rating-group" data-qid="7" data-min="rarely" data-max="always"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">8.</span> In the past month, how often has a lack of hydration made you feel irritable…</div>
+        <div class="rating-group" data-qid="8" data-min="never" data-max="constantly"></div>
+      </div>
     </div>
 
     <!-- ========== PAGE 3 · STRESS ========== -->
     <div id="page-stress" class="page">
       <h2><i class="fas fa-brain"></i> Stress</h2>
-      <div class="question-block"><div class="question-text"><span class="qnum">9.</span> How often have you felt confident about your ability to handle your personal problems?</div><div class="rating-group" data-qid="9"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">10.</span> How often have you felt that things were going your way?</div><div class="rating-group" data-qid="10"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">11.</span> How often have you felt difficulties were piling up so high that you could not overcome them?</div><div class="rating-group" data-qid="11"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">12.</span> How often have you been upset because of something that happened unexpectedly?</div><div class="rating-group" data-qid="12"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">13.</span> How often have you felt that you were unable to control the important things in your life?</div><div class="rating-group" data-qid="13"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">14.</span> How often have you felt nervous and "stressed"?</div><div class="rating-group" data-qid="14"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">15.</span> How often have you found that you could not cope with all the things that you had to do?</div><div class="rating-group" data-qid="15"></div></div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">9.</span> How often have you felt confident about your ability to handle your personal problems?</div>
+        <div class="rating-group" data-qid="9" data-min="never" data-max="always"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">10.</span> How often have you felt that things were going your way?</div>
+        <div class="rating-group" data-qid="10" data-min="never" data-max="always"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">11.</span> How often have you felt difficulties were piling up so high that you could not overcome them?</div>
+        <div class="rating-group" data-qid="11" data-min="never" data-max="very often"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">12.</span> How often have you been upset because of something that happened unexpectedly?</div>
+        <div class="rating-group" data-qid="12" data-min="never" data-max="very often"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">13.</span> How often have you felt that you were unable to control the important things in your life?</div>
+        <div class="rating-group" data-qid="13" data-min="never" data-max="very often"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">14.</span> How often have you felt nervous and "stressed"?</div>
+        <div class="rating-group" data-qid="14" data-min="never" data-max="always"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">15.</span> How often have you found that you could not cope with all the things that you had to do?</div>
+        <div class="rating-group" data-qid="15" data-min="never" data-max="very often"></div>
+      </div>
     </div>
 
     <!-- ========== PAGE 4 · SCREEN ========== -->
     <div id="page-screen" class="page">
       <h2><i class="fas fa-mobile-alt"></i> Screen Time</h2>
-      <div class="question-block"><div class="question-text"><span class="qnum">16.</span> On a typical day, would you consider the total amount of time you spend looking at digital screens healthy?</div><div class="rating-group" data-qid="16"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">17.</span> When you are trying to read a book, study, or complete a task, how often do you feel the urge to check your screens?</div><div class="rating-group" data-qid="17"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">18.</span> How frequently do you find yourself unexpectedly losing track of time while using screens for non-essential entertainment?</div><div class="rating-group" data-qid="18"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">19.</span> How dependent do you feel on your devices to feel entertained, relaxed, or mentally engaged?</div><div class="rating-group" data-qid="19"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">20.</span> To what extent do you feel that screen time interrupts your ability to be present or engage in real-life conversations?</div><div class="rating-group" data-qid="20"></div></div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">16.</span> On a typical day, would you consider the total amount of time you spend looking at digital screens healthy?</div>
+        <div class="rating-group" data-qid="16" data-min="not at all" data-max="very healthy"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">17.</span> When you are trying to read a book, study, or complete a task, how often do you feel the urge to check your screens?</div>
+        <div class="rating-group" data-qid="17" data-min="never" data-max="constantly"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">18.</span> How frequently do you find yourself unexpectedly losing track of time while using screens for non-essential entertainment?</div>
+        <div class="rating-group" data-qid="18" data-min="rarely" data-max="very often"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">19.</span> How dependent do you feel on your devices to feel entertained, relaxed, or mentally engaged?</div>
+        <div class="rating-group" data-qid="19" data-min="not dependent" data-max="completely dependent"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">20.</span> To what extent do you feel that screen time interrupts your ability to be present or engage in real-life conversations?</div>
+        <div class="rating-group" data-qid="20" data-min="not at all" data-max="very much"></div>
+      </div>
     </div>
 
     <!-- ========== PAGE 5 · PHYSICAL ========== -->
     <div id="page-physical" class="page">
       <h2><i class="fas fa-running"></i> Physical Activity</h2>
-      <div class="question-block"><div class="question-text"><span class="qnum">21.</span> How would you rate your ability to maintain a fast pace when walking or moving around for 10 minutes or more without becoming winded?</div><div class="rating-group" data-qid="21"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">22.</span> To what extent do you feel confident and stable in your physical body when bending, lifting, or reaching?</div><div class="rating-group" data-qid="22"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">23.</span> How much do you naturally seek out or enjoy physical activities during your day?</div><div class="rating-group" data-qid="23"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">24.</span> How would you rate your physical strength when it comes to carrying/lifting objects?</div><div class="rating-group" data-qid="24"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">25.</span> How frequently does your daily routine require you to breathe heavily, sweat, or get your heart rate up?</div><div class="rating-group" data-qid="25"></div></div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">21.</span> How would you rate your ability to maintain a fast pace when walking or moving around for 10 minutes or more without becoming winded?</div>
+        <div class="rating-group" data-qid="21" data-min="very poor" data-max="excellent"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">22.</span> To what extent do you feel confident and stable in your physical body when bending, lifting, or reaching?</div>
+        <div class="rating-group" data-qid="22" data-min="not confident" data-max="very confident"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">23.</span> How much do you naturally seek out or enjoy physical activities during your day?</div>
+        <div class="rating-group" data-qid="23" data-min="not at all" data-max="very much"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">24.</span> How would you rate your physical strength when it comes to carrying/lifting objects?</div>
+        <div class="rating-group" data-qid="24" data-min="very weak" data-max="very strong"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">25.</span> How frequently does your daily routine require you to breathe heavily, sweat, or get your heart rate up?</div>
+        <div class="rating-group" data-qid="25" data-min="rarely" data-max="very often"></div>
+      </div>
     </div>
 
     <!-- ========== PAGE 6 · EMOTIONAL ========== -->
     <div id="page-emotional" class="page">
       <h2><i class="fas fa-smile"></i> Emotional / Mental</h2>
-      <div class="question-block"><div class="question-text"><span class="qnum">26.</span> How much have you felt naturally interested and engaged in the things around you?</div><div class="rating-group" data-qid="26"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">27.</span> How often have you felt nervous, restless, or on edge?</div><div class="rating-group" data-qid="27"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">28.</span> On average, how confident and comfortable do you feel in your own skin right now?</div><div class="rating-group" data-qid="28"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">29.</span> How often have you felt easily annoyed or frustrated by small things?</div><div class="rating-group" data-qid="29"></div></div>
-      <div class="question-block"><div class="question-text"><span class="qnum">30.</span> How often have you felt easily annoyed or frustrated by small things? (duplicate)</div><div class="rating-group" data-qid="30"></div></div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">26.</span> How much have you felt naturally interested and engaged in the things around you?</div>
+        <div class="rating-group" data-qid="26" data-min="not at all" data-max="very much"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">27.</span> How often have you felt nervous, restless, or on edge?</div>
+        <div class="rating-group" data-qid="27" data-min="never" data-max="always"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">28.</span> On average, how confident and comfortable do you feel in your own skin right now?</div>
+        <div class="rating-group" data-qid="28" data-min="not at all" data-max="very much"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">29.</span> How often have you felt easily annoyed or frustrated by small things?</div>
+        <div class="rating-group" data-qid="29" data-min="never" data-max="always"></div>
+      </div>
+      <div class="question-block">
+        <div class="question-text"><span class="qnum">30.</span> How often have you felt easily annoyed or frustrated by small things? (duplicate)</div>
+        <div class="rating-group" data-qid="30" data-min="never" data-max="always"></div>
+      </div>
     </div>
 
     <!-- ========== PAGE 7 · SUMMARY ========== -->
@@ -410,9 +512,14 @@
 
     const ratingData = {};
 
-    // generate rating buttons 1-10
+    // ---------- generate rating buttons with CUSTOM labels (per group) ----------
     document.querySelectorAll('.rating-group').forEach(group => {
       const qid = group.dataset.qid;
+      // read custom labels from data attributes (fallback to "min" / "max")
+      const minLabel = group.dataset.min || 'min';
+      const maxLabel = group.dataset.max || 'max';
+
+      // create buttons 1-10
       for (let i = 1; i <= 10; i++) {
         const btn = document.createElement('button');
         btn.className = 'rating-btn';
@@ -431,18 +538,22 @@
         });
         group.appendChild(btn);
       }
-      // min/max labels
-      const low = document.createElement('span');
-      low.className = 'rating-label';
-      low.textContent = 'min';
-      const high = document.createElement('span');
-      high.className = 'rating-label';
-      high.textContent = 'max';
-      group.prepend(low);
-      group.appendChild(high);
+
+      // add custom labels (min / max) – these can be edited directly in the HTML
+      const minSpan = document.createElement('span');
+      minSpan.className = 'rating-label rating-label-min';
+      minSpan.textContent = minLabel;
+
+      const maxSpan = document.createElement('span');
+      maxSpan.className = 'rating-label rating-label-max';
+      maxSpan.textContent = maxLabel;
+
+      // prepend min, append max
+      group.prepend(minSpan);
+      group.appendChild(maxSpan);
     });
 
-    // check if current page is complete
+    // ---------- validation ----------
     function isCurrentPageComplete() {
       const current = document.querySelector('.page.active');
       if (!current) return false;
@@ -452,7 +563,6 @@
         const program = document.getElementById('intro-program');
         if (!name.value.trim()) return false;
         if (!age.value || parseInt(age.value) <= 0) return false;
-        // program select must have a valid value (not empty or placeholder)
         if (!program.value || program.value === '') return false;
         return true;
       }
@@ -469,7 +579,7 @@
     }
     function clearNavError() { navError.innerHTML = ''; }
 
-    // update summary (NO average, only answered count + last 3)
+    // ---------- summary ----------
     function updateSummaryText() {
       const entries = Object.entries(ratingData);
       if (entries.length === 0) {
@@ -496,13 +606,13 @@
       progressBar.style.width = pct + '%';
     }
 
-    // clear all and restart
+    // ---------- clear & restart ----------
     function clearAllAndRestart() {
       document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
       for (let key in ratingData) delete ratingData[key];
       document.getElementById('intro-name').value = '';
       document.getElementById('intro-age').value = '';
-      document.getElementById('intro-program').selectedIndex = 0; // reset select
+      document.getElementById('intro-program').selectedIndex = 0;
       document.getElementById('intro-email').value = '';
       updateSummaryText();
       updateProgress();
@@ -510,7 +620,7 @@
       goToPage(0);
     }
 
-    // navigation
+    // ---------- navigation ----------
     function goToPage(index) {
       if (index < 0 || index >= totalPages) return;
       if (index > currentPageIndex) {
@@ -550,13 +660,11 @@
 
     clearAllBtn.addEventListener('click', clearAllAndRestart);
 
-    // clear error on intro input/select change
     document.querySelectorAll('.intro-input-group input, .intro-input-group select').forEach(el => {
       el.addEventListener('input', clearNavError);
       el.addEventListener('change', clearNavError);
     });
 
-    // keyboard arrows
     document.addEventListener('keydown', function(e) {
       if (e.key === 'ArrowRight' && !e.ctrlKey && !e.metaKey && !nextBtn.disabled) nextBtn.click();
       else if (e.key === 'ArrowLeft' && !e.ctrlKey && !e.metaKey && !prevBtn.disabled) prevBtn.click();
