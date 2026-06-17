@@ -43,7 +43,6 @@
       margin-bottom: 20px;
       position: relative;
     }
-    /* progress */
     #progress-container {
       width: 100%;
       background: #1f2a2e;
@@ -62,14 +61,12 @@
       transition: width 0.35s ease;
       box-shadow: 0 0 12px #3a7a8a;
     }
-    /* pages */
     .page { display: none; animation: fadePage 0.25s ease; }
     .page.active { display: block; }
     @keyframes fadePage {
       0% { opacity: 0.6; transform: translateY(6px); }
       100% { opacity: 1; transform: translateY(0); }
     }
-    /* nav */
     .nav-bar {
       display: flex;
       flex-wrap: wrap;
@@ -103,8 +100,6 @@
     .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
     .nav-btn.primary { background: #3a5b6b; border-color: #5a7e8e; color: white; }
     .nav-btn.primary:hover:not(:disabled) { background: #4e7488; }
-
-    /* question blocks */
     .question-block {
       background: rgba(255,255,255,0.02);
       padding: 14px 16px;
@@ -122,8 +117,6 @@
       gap: 6px;
     }
     .question-text .qnum { color: #8ab3c7; font-weight: 400; min-width: 32px; }
-
-    /* rating 1-10 with custom labels */
     .rating-group {
       display: flex;
       flex-wrap: wrap;
@@ -156,7 +149,6 @@
       box-shadow: 0 0 0 2px #5a8a9e;
       font-weight: 500;
     }
-    /* custom label style (min / max) */
     .rating-label {
       font-size: 14px;
       color: #aaa;
@@ -169,8 +161,6 @@
     }
     .rating-label-min { color: #8ab3c7; }
     .rating-label-max { color: #c7a88a; }
-
-    /* intro inputs & select */
     .intro-input-group {
       display: flex;
       flex-direction: column;
@@ -199,10 +189,7 @@
     }
     .intro-input-group input::placeholder { color: #666; }
     .intro-input-group select option { background: #1e1e1e; color: #f0f0f0; }
-
     #sign-up .question-block { border-left-color: #7aa5b9; background: rgba(255,255,255,0.04); }
-
-    /* summary */
     #summary-output {
       background: #141c1f;
       padding: 16px 22px;
@@ -260,6 +247,18 @@
       gap: 10px;
       margin-top: 8px;
     }
+    #server-feedback {
+      background: #1f2a2e;
+      padding: 12px 20px;
+      border-radius: 40px;
+      margin-top: 20px;
+      text-align: center;
+      border-left: 4px solid #7aa5b9;
+      font-size: 18px;
+    }
+    #server-feedback i { margin-right: 10px; }
+    .success { color: #8bc34a; }
+    .error { color: #ef8a8a; }
     @media (max-width: 700px) {
       #sub-main { font-size: 17px; padding: 12px; }
       .rating-btn { width: 36px; height: 36px; font-size: 15px; }
@@ -471,6 +470,10 @@
       <div style="background:#1f2a2e; border-radius:30px; padding:20px; margin-top:10px;">
         <p><i class="fas fa-info-circle" style="color:#7aa5b9;"></i> This is the final page. You can go back and adjust any rating.</p>
         <button class="btn-secondary" id="clearAllBtn" style="margin-top:12px;"><i class="fas fa-undo-alt"></i> Clear all & restart</button>
+        <button class="btn-secondary" id="submitToDbBtn" style="margin-top:12px; margin-left:12px; background:#3a5b6b; border-color:#5a7e8e; color:white;">
+          <i class="fas fa-database"></i> Submit to database
+        </button>
+        <div id="server-feedback"><i class="fas fa-circle-info"></i> Click "Submit" to store all answers.</div>
       </div>
     </div>
 
@@ -509,17 +512,17 @@
     const navError = document.getElementById('navError');
     const summarySpan = document.getElementById('summaryText');
     const clearAllBtn = document.getElementById('clearAllBtn');
+    const submitBtn = document.getElementById('submitToDbBtn');
+    const feedbackDiv = document.getElementById('server-feedback');
 
     const ratingData = {};
 
-    // ---------- generate rating buttons with CUSTOM labels (per group) ----------
+    // ---------- generate rating buttons with CUSTOM labels ----------
     document.querySelectorAll('.rating-group').forEach(group => {
       const qid = group.dataset.qid;
-      // read custom labels from data attributes (fallback to "min" / "max")
       const minLabel = group.dataset.min || 'min';
       const maxLabel = group.dataset.max || 'max';
 
-      // create buttons 1-10
       for (let i = 1; i <= 10; i++) {
         const btn = document.createElement('button');
         btn.className = 'rating-btn';
@@ -539,7 +542,6 @@
         group.appendChild(btn);
       }
 
-      // add custom labels (min / max) – these can be edited directly in the HTML
       const minSpan = document.createElement('span');
       minSpan.className = 'rating-label rating-label-min';
       minSpan.textContent = minLabel;
@@ -548,7 +550,6 @@
       maxSpan.className = 'rating-label rating-label-max';
       maxSpan.textContent = maxLabel;
 
-      // prepend min, append max
       group.prepend(minSpan);
       group.appendChild(maxSpan);
     });
@@ -617,6 +618,8 @@
       updateSummaryText();
       updateProgress();
       clearNavError();
+      feedbackDiv.innerHTML = `<i class="fas fa-circle-info"></i> Click "Submit" to store all answers.`;
+      feedbackDiv.className = '';
       goToPage(0);
     }
 
@@ -646,7 +649,60 @@
     function nextPage() { if (currentPageIndex < totalPages-1) goToPage(currentPageIndex+1); }
     function prevPage() { if (currentPageIndex > 0) goToPage(currentPageIndex-1); }
 
-    // event listeners
+    // ---------- SUBMIT TO DATABASE (TEMPLATE) ----------
+    // Replace the URL with your own backend endpoint.
+    // The payload contains all answers + meta data.
+    function submitToDatabase() {
+      // collect meta data
+      const name = document.getElementById('intro-name').value.trim();
+      const age = document.getElementById('intro-age').value.trim();
+      const program = document.getElementById('intro-program').value;
+      const email = document.getElementById('intro-email').value.trim();
+
+      if (!name || !age || !program) {
+        feedbackDiv.innerHTML = `<i class="fas fa-exclamation-triangle error"></i> Please fill in all required fields on the intro page.`;
+        feedbackDiv.className = 'error';
+        return;
+      }
+
+      // build payload: all ratings + meta
+      const answers = { ...ratingData };
+      const payload = {
+        name,
+        age: parseInt(age, 10),
+        program,
+        email: email || null,
+        answers: answers
+      };
+
+      // -------- ✏️ EDIT THIS URL TO POINT TO YOUR BACKEND --------
+      const YOUR_BACKEND_URL = '/submit';  // <-- change to your endpoint (e.g. 'https://your-api.com/submit')
+
+      fetch(YOUR_BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        if (data.status === 'success') {
+          feedbackDiv.innerHTML = `<i class="fas fa-check-circle success"></i> ✅ All answers stored in database! (ID: ${data.id || '—'})`;
+          feedbackDiv.className = 'success';
+        } else {
+          feedbackDiv.innerHTML = `<i class="fas fa-exclamation-triangle error"></i> ❌ Server error: ${data.message || 'Unknown error'}`;
+          feedbackDiv.className = 'error';
+        }
+      })
+      .catch(err => {
+        feedbackDiv.innerHTML = `<i class="fas fa-exclamation-triangle error"></i> ❌ Could not connect to server. Is the backend running? (${err.message})`;
+        feedbackDiv.className = 'error';
+      });
+    }
+
+    // ----- event listeners -----
     nextBtn.addEventListener('click', nextPage);
     prevBtn.addEventListener('click', prevPage);
 
@@ -659,6 +715,7 @@
     });
 
     clearAllBtn.addEventListener('click', clearAllAndRestart);
+    submitBtn.addEventListener('click', submitToDatabase);
 
     document.querySelectorAll('.intro-input-group input, .intro-input-group select').forEach(el => {
       el.addEventListener('input', clearNavError);
@@ -676,5 +733,29 @@
     updateSummaryText();
   })();
 </script>
+
+<!-- 
+  ============================================================
+  BACKEND TEMPLATE (Flask + MySQL) – adapt to your own database
+  ============================================================
+  Replace the connection details and table schema with your own.
+  
+  Requirements: pip install flask flask-cors mysql-connector-python
+  
+  Example table (adjust to your schema):
+  CREATE TABLE responses (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(100),
+      age INT,
+      program VARCHAR(50),
+      email VARCHAR(100),
+      answers JSON,
+      submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+  
+  Run: python server.py
+  The frontend will POST to /submit (change URL in submitToDatabase()).
+-->
+
 </body>
 </html>
