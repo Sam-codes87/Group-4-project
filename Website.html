@@ -1,703 +1,572 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wellbeing Questionnaire · Multi-page</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* ----- global reset & base ----- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wellbeing · 8‑page questionnaire</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #0f0f0f;
+      border: 2px solid #676767;
+      display: flex;
+      justify-content: center;
+      padding: 12px;
+      min-height: 100vh;
+      font-family: 'Roboto', 'Arial', sans-serif;
+    }
+    #main {
+      padding-top: 30px;
+      border: 2px solid #535353;
+      background-color: #373737;
+      width: 95%;
+      max-width: 1300px;
+      min-height: 840px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+    #sub-main {
+      border: 2px solid #3f3f3f;
+      padding: 20px 20px 30px;
+      background-color: #222;
+      color: #e9e9e9;
+      width: 95%;
+      height: auto;
+      font-size: 20px;
+      line-height: 1.5;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    /* progress */
+    #progress-container {
+      width: 100%;
+      background: #1f2a2e;
+      border-radius: 40px;
+      height: 16px;
+      margin: 8px 0 20px 0;
+      border: 1px solid #3d4f55;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    }
+    #progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #4e8a9e, #7ab8d0);
+      border-radius: 40px;
+      transition: width 0.35s ease;
+      box-shadow: 0 0 12px #3a7a8a;
+    }
+    /* pages */
+    .page { display: none; animation: fadePage 0.25s ease; }
+    .page.active { display: block; }
+    @keyframes fadePage {
+      0% { opacity: 0.6; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    /* nav */
+    .nav-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px 20px;
+      margin-top: 30px;
+      padding-top: 18px;
+      border-top: 1px solid #3d4f55;
+    }
+    .nav-btn {
+      background: #2d414a;
+      border: 1px solid #4a5f68;
+      color: #ddd;
+      padding: 10px 28px;
+      border-radius: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: inherit;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: #3e5b68;
+      color: white;
+      border-color: #7aa5b9;
+      transform: scale(1.02);
+    }
+    .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+    .nav-btn.primary { background: #3a5b6b; border-color: #5a7e8e; color: white; }
+    .nav-btn.primary:hover:not(:disabled) { background: #4e7488; }
 
-        body {
-            background-color: rgb(15, 15, 15);
-            border: 2px solid rgb(103, 103, 103);
-            display: flex;
-            justify-content: center;
-            padding: 12px;
-            min-height: 100vh;
-            font-family: 'Roboto', 'Arial', sans-serif;
-        }
+    /* question blocks */
+    .question-block {
+      background: rgba(255,255,255,0.02);
+      padding: 14px 16px;
+      margin: 10px 0;
+      border-radius: 14px;
+      border-left: 3px solid #3a5b6b;
+      transition: background 0.15s;
+    }
+    .question-block:hover { background: rgba(255,255,255,0.06); }
+    .question-text {
+      margin-bottom: 10px;
+      font-weight: 300;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .question-text .qnum { color: #8ab3c7; font-weight: 400; min-width: 32px; }
 
-        #main {
-            padding-top: 30px;
-            border: 2px solid rgb(83, 83, 83);
-            background-color: rgb(55, 55, 55);
-            width: 95%;
-            max-width: 1300px;
-            min-height: 840px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-        }
+    /* rating 1-10 */
+    .rating-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 6px;
+      margin-top: 4px;
+    }
+    .rating-btn {
+      background: #252525;
+      border: 1px solid #3d3d3d;
+      color: #c0c0c0;
+      width: 42px;
+      height: 42px;
+      border-radius: 30px;
+      font-size: 18px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      font-family: inherit;
+    }
+    .rating-btn:hover { background: #3a4f5a; border-color: #6c8c9c; color: white; transform: scale(1.05); }
+    .rating-btn.selected {
+      background: #3a7a8a;
+      border-color: #8ab3c7;
+      color: white;
+      box-shadow: 0 0 0 2px #5a8a9e;
+      font-weight: 500;
+    }
+    .rating-label { font-size: 14px; color: #888; margin: 0 2px; }
 
-        #sub-main {
-            border: 2px solid rgb(63, 63, 63);
-            padding: 20px 20px 30px;
-            background-color: rgb(34, 34, 34);
-            color: rgb(233, 233, 233);
-            width: 95%;
-            height: auto;
-            font-size: 20px;
-            line-height: 1.5;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            position: relative;
-        }
+    /* intro inputs & select */
+    .intro-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .intro-input-group input,
+    .intro-input-group select {
+      background: #1e1e1e;
+      border: 1px solid #3d3d3d;
+      border-radius: 30px;
+      padding: 10px 18px;
+      font-size: 18px;
+      color: #f0f0f0;
+      width: 100%;
+      transition: 0.2s;
+      font-family: inherit;
+      appearance: auto;
+    }
+    .intro-input-group input:focus,
+    .intro-input-group select:focus {
+      outline: none;
+      border-color: #7aa5b9;
+      box-shadow: 0 0 0 2px rgba(122, 165, 185, 0.3);
+      background: #141414;
+    }
+    .intro-input-group input::placeholder { color: #666; }
+    .intro-input-group select option { background: #1e1e1e; color: #f0f0f0; }
 
-        /* ----- progress bar ----- */
-        #progress-container {
-            width: 100%;
-            background: #1f2a2e;
-            border-radius: 40px;
-            height: 16px;
-            margin: 8px 0 20px 0;
-            border: 1px solid #3d4f55;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
-        }
+    #sign-up .question-block { border-left-color: #7aa5b9; background: rgba(255,255,255,0.04); }
 
-        #progress-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #4e8a9e, #7ab8d0);
-            border-radius: 40px;
-            transition: width 0.35s ease;
-            box-shadow: 0 0 12px #3a7a8a;
-        }
-
-        /* ----- page system (tabs) ----- */
-        .page {
-            display: none;
-            animation: fadePage 0.25s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadePage {
-            0% { opacity: 0.6; transform: translateY(6px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ----- navigation buttons ----- */
-        .nav-bar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px 20px;
-            margin-top: 30px;
-            padding-top: 18px;
-            border-top: 1px solid #3d4f55;
-        }
-
-        .nav-btn {
-            background: #2d414a;
-            border: 1px solid #4a5f68;
-            color: #ddd;
-            padding: 10px 28px;
-            border-radius: 40px;
-            font-size: 20px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-family: inherit;
-        }
-
-        .nav-btn:hover:not(:disabled) {
-            background: #3e5b68;
-            color: white;
-            border-color: #7aa5b9;
-            transform: scale(1.02);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .nav-btn.primary {
-            background: #3a5b6b;
-            border-color: #5a7e8e;
-            color: white;
-        }
-        .nav-btn.primary:hover:not(:disabled) {
-            background: #4e7488;
-        }
-
-        /* ----- question blocks (rating) ----- */
-        .question-block {
-            background: rgba(255,255,255,0.02);
-            padding: 14px 16px;
-            margin: 10px 0;
-            border-radius: 14px;
-            border-left: 3px solid #3a5b6b;
-            transition: background 0.15s;
-        }
-        .question-block:hover {
-            background: rgba(255,255,255,0.06);
-        }
-        .question-text {
-            margin-bottom: 10px;
-            font-weight: 300;
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
-        }
-        .question-text .qnum {
-            color: #8ab3c7;
-            font-weight: 400;
-            min-width: 32px;
-        }
-
-        /* rating buttons 1-10 */
-        .rating-group {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 8px 6px;
-            margin-top: 4px;
-        }
-        .rating-btn {
-            background: #252525;
-            border: 1px solid #3d3d3d;
-            color: #c0c0c0;
-            width: 42px;
-            height: 42px;
-            border-radius: 30px;
-            font-size: 18px;
-            font-weight: 400;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            font-family: inherit;
-        }
-        .rating-btn:hover {
-            background: #3a4f5a;
-            border-color: #6c8c9c;
-            color: white;
-            transform: scale(1.05);
-        }
-        .rating-btn.selected {
-            background: #3a7a8a;
-            border-color: #8ab3c7;
-            color: white;
-            box-shadow: 0 0 0 2px #5a8a9e;
-            font-weight: 500;
-        }
-        .rating-label {
-            font-size: 14px;
-            color: #888;
-            margin: 0 2px;
-        }
-
-        /* ----- intro page: text inputs under each question ----- */
-        .intro-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 6px;
-        }
-        .intro-input-group input {
-            background: #1e1e1e;
-            border: 1px solid #3d3d3d;
-            border-radius: 30px;
-            padding: 10px 18px;
-            font-size: 18px;
-            color: #f0f0f0;
-            width: 100%;
-            transition: 0.2s;
-            font-family: inherit;
-        }
-        .intro-input-group input:focus {
-            outline: none;
-            border-color: #7aa5b9;
-            box-shadow: 0 0 0 2px rgba(122, 165, 185, 0.3);
-            background: #141414;
-        }
-        .intro-input-group input::placeholder {
-            color: #666;
-        }
-
-        #sign-up .question-block {
-            border-left-color: #7aa5b9;
-            background: rgba(255,255,255,0.04);
-        }
-
-        /* ----- summary output ----- */
-        #summary-output {
-            background: #141c1f;
-            padding: 16px 22px;
-            border-radius: 40px;
-            font-size: 18px;
-            color: #d4e4ec;
-            border-left: 4px solid #7aa5b9;
-            margin: 16px 0;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-        #summary-output i {
-            color: #7aa5b9;
-            font-size: 24px;
-        }
-
-        .btn-secondary {
-            background: #2d3d44;
-            border: 1px solid #4a5f68;
-            color: #ccc;
-            font-size: 18px;
-            padding: 8px 22px;
-            border-radius: 40px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-secondary:hover {
-            background: #3e5660;
-            color: white;
-        }
-
-        .flex-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-        }
-
-        h4 {
-            margin: 30px 0 15px 0;
-            font-weight: 300;
-            color: #bbbbbb;
-            font-size: 26px;
-            border-left: 4px solid #6c8c9c;
-            padding-left: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        h2 {
-            text-align: center;
-            margin: 10px 0 15px 0;
-            font-weight: 400;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #555;
-            padding-bottom: 10px;
-        }
-
-        .error-msg {
-            color: #f08a8a;
-            background: #3a1e1e;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 16px;
-            border: 1px solid #a54a4a;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        @media (max-width: 700px) {
-            #sub-main { font-size: 17px; padding: 12px; }
-            .rating-btn { width: 36px; height: 36px; font-size: 15px; }
-            .nav-bar { flex-direction: column; align-items: stretch; }
-            .nav-btn { justify-content: center; }
-        }
-    </style>
+    /* summary */
+    #summary-output {
+      background: #141c1f;
+      padding: 16px 22px;
+      border-radius: 40px;
+      font-size: 18px;
+      color: #d4e4ec;
+      border-left: 4px solid #7aa5b9;
+      margin: 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    #summary-output i { color: #7aa5b9; font-size: 24px; }
+    .btn-secondary {
+      background: #2d3d44;
+      border: 1px solid #4a5f68;
+      color: #ccc;
+      font-size: 18px;
+      padding: 8px 22px;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-secondary:hover { background: #3e5660; color: white; }
+    .flex-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    h4 {
+      margin: 30px 0 15px 0;
+      font-weight: 300;
+      color: #bbb;
+      font-size: 26px;
+      border-left: 4px solid #6c8c9c;
+      padding-left: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2 {
+      text-align: center;
+      margin: 10px 0 15px 0;
+      font-weight: 400;
+      letter-spacing: 1px;
+      border-bottom: 1px solid #555;
+      padding-bottom: 10px;
+    }
+    .error-msg {
+      color: #f08a8a;
+      background: #3a1e1e;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 16px;
+      border: 1px solid #a54a4a;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    @media (max-width: 700px) {
+      #sub-main { font-size: 17px; padding: 12px; }
+      .rating-btn { width: 36px; height: 36px; font-size: 15px; }
+      .nav-bar { flex-direction: column; align-items: stretch; }
+      .nav-btn { justify-content: center; }
+    }
+  </style>
 </head>
 <body>
 <div id="main">
-    <div id="sub-main">
+  <div id="sub-main">
 
-        <!-- ===== PROGRESS BAR ===== -->
-        <div id="progress-container">
-            <div id="progress-bar" style="width: 0%;"></div>
+    <!-- progress bar -->
+    <div id="progress-container"><div id="progress-bar" style="width:0%;"></div></div>
+
+    <!-- ========== PAGE 0 · INTRO ========== -->
+    <div id="page-intro" class="page active">
+      <h2><i class="fas fa-clipboard-list" style="margin-right:12px;"></i>Welcome · Introduction</h2>
+      <div id="sign-up">
+        <div class="question-block">
+          <div class="question-text"><span class="qnum">1.</span> What is your full name?</div>
+          <div class="intro-input-group"><input type="text" id="intro-name" placeholder="Enter your full name..."></div>
         </div>
-
-        <!-- ========================================================= -->
-        <!-- PAGE 0: INTRODUCTION with TEXT INPUTS -->
-        <div id="page-intro" class="page active">
-            <h2><i class="fas fa-clipboard-list" style="margin-right: 12px;"></i>Welcome · Introduction</h2>
-            <div id="sign-up">
-                <div class="question-block">
-                    <div class="question-text"><span class="qnum">1.</span> What is your full name?</div>
-                    <div class="intro-input-group">
-                        <input type="text" id="intro-name" placeholder="Enter your full name..." data-intro="name">
-                    </div>
-                </div>
-                <div class="question-block">
-                    <div class="question-text"><span class="qnum">2.</span> What is your age?</div>
-                    <div class="intro-input-group">
-                        <input type="number" id="intro-age" placeholder="Enter your age..." data-intro="age" min="1" max="120">
-                    </div>
-                </div>
-                <div class="question-block">
-                    <div class="question-text"><span class="qnum">3.</span> What academical programme are you currently enrolled in?</div>
-                    <div class="intro-input-group">
-                        <input type="text" id="intro-program" placeholder="A-Level or IB student" data-intro="program">
-                    </div>
-                </div>
-                <div class="question-block">
-                    <div class="question-text"><span class="qnum">4.</span> What is your Email? (Optional)</div>
-                    <div class="intro-input-group">
-                        <input type="email" id="intro-email" placeholder="your@email.com (optional)" data-intro="email">
-                    </div>
-                </div>
-                <p style="margin-top:20px; background:#2a3a40; border-left:4px solid #7aa5b9; padding:14px; border-radius:8px;">
-                    <i class="fas fa-check-circle" style="color: #7aa5b9; margin-right: 8px;"></i>
-                    I am aware that I have the right to withdraw at any time of the experiment. Your information will remain confidential and only used for academical purposes only.
-                </p>
-            </div>
-            <div style="margin-top: 20px; text-align: right;">
-                <button class="nav-btn primary" id="startBtn"><i class="fas fa-arrow-right"></i> Start questionnaire</button>
-            </div>
+        <div class="question-block">
+          <div class="question-text"><span class="qnum">2.</span> What is your age?</div>
+          <div class="intro-input-group"><input type="number" id="intro-age" placeholder="Enter your age..." min="1" max="120"></div>
         </div>
-
-        <!-- ========================================================= -->
-        <!-- PAGE 1: SLEEP (q1-5) -->
-        <div id="page-sleep" class="page">
-            <h2><i class="fas fa-moon"></i> Sleep</h2>
-            <div id="q1" class="question-block" data-q="1"><div class="question-text"><span class="qnum">1.</span> How much sleep do you usually get?</div><div class="rating-group" data-qid="1"></div></div>
-            <div id="q2" class="question-block" data-q="2"><div class="question-text"><span class="qnum">2.</span> How much difficulty do you have falling asleep at the beginning of the night?</div><div class="rating-group" data-qid="2"></div></div>
-            <div id="q3" class="question-block" data-q="3"><div class="question-text"><span class="qnum">3.</span> How would you rate your overall sleep quality over the past month?</div><div class="rating-group" data-qid="3"></div></div>
-            <div id="q4" class="question-block" data-q="4"><div class="question-text"><span class="qnum">4.</span> How often do you wake up in the middle of the night and struggle to get back to sleep?</div><div class="rating-group" data-qid="4"></div></div>
-            <div id="q5" class="question-block" data-q="5"><div class="question-text"><span class="qnum">5.</span> How sleepy or exhausted do you feel during the daytime hours?</div><div class="rating-group" data-qid="5"></div></div>
+        <div class="question-block">
+          <div class="question-text"><span class="qnum">3.</span> Which programme are you currently enrolled in?</div>
+          <div class="intro-input-group">
+            <select id="intro-program">
+              <option value="" disabled selected>Select your programme</option>
+              <option value="A-Level">A-Level</option>
+              <option value="IB">IB</option>
+            </select>
+          </div>
         </div>
-
-        <!-- PAGE 2: WATER (q6-8) -->
-        <div id="page-water" class="page">
-            <h2><i class="fas fa-tint"></i> Water Intake</h2>
-            <div id="q6" class="question-block" data-q="6"><div class="question-text"><span class="qnum">6.</span> In the past month, how often have you felt physically dehydrated…</div><div class="rating-group" data-qid="6"></div></div>
-            <div id="q7" class="question-block" data-q="7"><div class="question-text"><span class="qnum">7.</span> In the past month, how often have you drunk around 2 litres of water daily?</div><div class="rating-group" data-qid="7"></div></div>
-            <div id="q8" class="question-block" data-q="8"><div class="question-text"><span class="qnum">8.</span> In the past month, how often has a lack of hydration made you feel irritable…</div><div class="rating-group" data-qid="8"></div></div>
+        <div class="question-block">
+          <div class="question-text"><span class="qnum">4.</span> What is your Email? (Optional)</div>
+          <div class="intro-input-group"><input type="email" id="intro-email" placeholder="your@email.com (optional)"></div>
         </div>
+        <p style="margin-top:20px; background:#2a3a40; border-left:4px solid #7aa5b9; padding:14px; border-radius:8px;">
+          <i class="fas fa-check-circle" style="color:#7aa5b9; margin-right:8px;"></i>
+          I am aware that I have the right to withdraw at any time of the experiment. Your information will remain confidential and only used for academical purposes only.
+        </p>
+      </div>
+      <div style="margin-top:20px; text-align:right;">
+        <button class="nav-btn primary" id="startBtn"><i class="fas fa-arrow-right"></i> Start questionnaire</button>
+      </div>
+    </div>
 
-        <!-- PAGE 3: STRESS (q9-15) -->
-        <div id="page-stress" class="page">
-            <h2><i class="fas fa-brain"></i> Stress</h2>
-            <div id="q9" class="question-block" data-q="9"><div class="question-text"><span class="qnum">9.</span> How often have you felt confident about your ability to handle your personal problems?</div><div class="rating-group" data-qid="9"></div></div>
-            <div id="q10" class="question-block" data-q="10"><div class="question-text"><span class="qnum">10.</span> How often have you felt that things were going your way?</div><div class="rating-group" data-qid="10"></div></div>
-            <div id="q11" class="question-block" data-q="11"><div class="question-text"><span class="qnum">11.</span> How often have you felt difficulties were piling up so high that you could not overcome them?</div><div class="rating-group" data-qid="11"></div></div>
-            <div id="q12" class="question-block" data-q="12"><div class="question-text"><span class="qnum">12.</span> How often have you been upset because of something that happened unexpectedly?</div><div class="rating-group" data-qid="12"></div></div>
-            <div id="q13" class="question-block" data-q="13"><div class="question-text"><span class="qnum">13.</span> How often have you felt that you were unable to control the important things in your life?</div><div class="rating-group" data-qid="13"></div></div>
-            <div id="q14" class="question-block" data-q="14"><div class="question-text"><span class="qnum">14.</span> How often have you felt nervous and "stressed"?</div><div class="rating-group" data-qid="14"></div></div>
-            <div id="q15" class="question-block" data-q="15"><div class="question-text"><span class="qnum">15.</span> How often have you found that you could not cope with all the things that you had to do?</div><div class="rating-group" data-qid="15"></div></div>
-        </div>
+    <!-- ========== PAGE 1 · SLEEP ========== -->
+    <div id="page-sleep" class="page">
+      <h2><i class="fas fa-moon"></i> Sleep</h2>
+      <div class="question-block"><div class="question-text"><span class="qnum">1.</span> How much sleep do you usually get?</div><div class="rating-group" data-qid="1"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">2.</span> How much difficulty do you have falling asleep at the beginning of the night?</div><div class="rating-group" data-qid="2"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">3.</span> How would you rate your overall sleep quality over the past month?</div><div class="rating-group" data-qid="3"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">4.</span> How often do you wake up in the middle of the night and struggle to get back to sleep?</div><div class="rating-group" data-qid="4"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">5.</span> How sleepy or exhausted do you feel during the daytime hours?</div><div class="rating-group" data-qid="5"></div></div>
+    </div>
 
-        <!-- PAGE 4: SCREEN (q16-20) -->
-        <div id="page-screen" class="page">
-            <h2><i class="fas fa-mobile-alt"></i> Screen Time</h2>
-            <div id="q16" class="question-block" data-q="16"><div class="question-text"><span class="qnum">16.</span> On a typical day, would you consider the total amount of time you spend looking at digital screens healthy?</div><div class="rating-group" data-qid="16"></div></div>
-            <div id="q17" class="question-block" data-q="17"><div class="question-text"><span class="qnum">17.</span> When you are trying to read a book, study, or complete a task, how often do you feel the urge to check your screens?</div><div class="rating-group" data-qid="17"></div></div>
-            <div id="q18" class="question-block" data-q="18"><div class="question-text"><span class="qnum">18.</span> How frequently do you find yourself unexpectedly losing track of time while using screens for non-essential entertainment?</div><div class="rating-group" data-qid="18"></div></div>
-            <div id="q19" class="question-block" data-q="19"><div class="question-text"><span class="qnum">19.</span> How dependent do you feel on your devices to feel entertained, relaxed, or mentally engaged?</div><div class="rating-group" data-qid="19"></div></div>
-            <div id="q20" class="question-block" data-q="20"><div class="question-text"><span class="qnum">20.</span> To what extent do you feel that screen time interrupts your ability to be present or engage in real-life conversations?</div><div class="rating-group" data-qid="20"></div></div>
-        </div>
+    <!-- ========== PAGE 2 · WATER ========== -->
+    <div id="page-water" class="page">
+      <h2><i class="fas fa-tint"></i> Water Intake</h2>
+      <div class="question-block"><div class="question-text"><span class="qnum">6.</span> In the past month, how often have you felt physically dehydrated…</div><div class="rating-group" data-qid="6"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">7.</span> In the past month, how often have you drunk around 2 litres of water daily?</div><div class="rating-group" data-qid="7"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">8.</span> In the past month, how often has a lack of hydration made you feel irritable…</div><div class="rating-group" data-qid="8"></div></div>
+    </div>
 
-        <!-- PAGE 5: PHYSICAL (q21-25) -->
-        <div id="page-physical" class="page">
-            <h2><i class="fas fa-running"></i> Physical Activity</h2>
-            <div id="q21" class="question-block" data-q="21"><div class="question-text"><span class="qnum">21.</span> How would you rate your ability to maintain a fast pace when walking or moving around for 10 minutes or more without becoming winded?</div><div class="rating-group" data-qid="21"></div></div>
-            <div id="q22" class="question-block" data-q="22"><div class="question-text"><span class="qnum">22.</span> To what extent do you feel confident and stable in your physical body when bending, lifting, or reaching?</div><div class="rating-group" data-qid="22"></div></div>
-            <div id="q23" class="question-block" data-q="23"><div class="question-text"><span class="qnum">23.</span> How much do you naturally seek out or enjoy physical activities during your day?</div><div class="rating-group" data-qid="23"></div></div>
-            <div id="q24" class="question-block" data-q="24"><div class="question-text"><span class="qnum">24.</span> How would you rate your physical strength when it comes to carrying/lifting objects?</div><div class="rating-group" data-qid="24"></div></div>
-            <div id="q25" class="question-block" data-q="25"><div class="question-text"><span class="qnum">25.</span> How frequently does your daily routine require you to breathe heavily, sweat, or get your heart rate up?</div><div class="rating-group" data-qid="25"></div></div>
-        </div>
+    <!-- ========== PAGE 3 · STRESS ========== -->
+    <div id="page-stress" class="page">
+      <h2><i class="fas fa-brain"></i> Stress</h2>
+      <div class="question-block"><div class="question-text"><span class="qnum">9.</span> How often have you felt confident about your ability to handle your personal problems?</div><div class="rating-group" data-qid="9"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">10.</span> How often have you felt that things were going your way?</div><div class="rating-group" data-qid="10"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">11.</span> How often have you felt difficulties were piling up so high that you could not overcome them?</div><div class="rating-group" data-qid="11"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">12.</span> How often have you been upset because of something that happened unexpectedly?</div><div class="rating-group" data-qid="12"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">13.</span> How often have you felt that you were unable to control the important things in your life?</div><div class="rating-group" data-qid="13"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">14.</span> How often have you felt nervous and "stressed"?</div><div class="rating-group" data-qid="14"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">15.</span> How often have you found that you could not cope with all the things that you had to do?</div><div class="rating-group" data-qid="15"></div></div>
+    </div>
 
-        <!-- PAGE 6: EMOTIONAL (q26-30) -->
-        <div id="page-emotional" class="page">
-            <h2><i class="fas fa-smile"></i> Emotional / Mental</h2>
-            <div id="q26" class="question-block" data-q="26"><div class="question-text"><span class="qnum">26.</span> How much have you felt naturally interested and engaged in the things around you?</div><div class="rating-group" data-qid="26"></div></div>
-            <div id="q27" class="question-block" data-q="27"><div class="question-text"><span class="qnum">27.</span> How often have you felt nervous, restless, or on edge?</div><div class="rating-group" data-qid="27"></div></div>
-            <div id="q28" class="question-block" data-q="28"><div class="question-text"><span class="qnum">28.</span> On average, how confident and comfortable do you feel in your own skin right now?</div><div class="rating-group" data-qid="28"></div></div>
-            <div id="q29" class="question-block" data-q="29"><div class="question-text"><span class="qnum">29.</span> How often have you felt easily annoyed or frustrated by small things?</div><div class="rating-group" data-qid="29"></div></div>
-            <div id="q30" class="question-block" data-q="30"><div class="question-text"><span class="qnum">30.</span> How often have you felt easily annoyed or frustrated by small things? (duplicate)</div><div class="rating-group" data-qid="30"></div></div>
-        </div>
+    <!-- ========== PAGE 4 · SCREEN ========== -->
+    <div id="page-screen" class="page">
+      <h2><i class="fas fa-mobile-alt"></i> Screen Time</h2>
+      <div class="question-block"><div class="question-text"><span class="qnum">16.</span> On a typical day, would you consider the total amount of time you spend looking at digital screens healthy?</div><div class="rating-group" data-qid="16"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">17.</span> When you are trying to read a book, study, or complete a task, how often do you feel the urge to check your screens?</div><div class="rating-group" data-qid="17"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">18.</span> How frequently do you find yourself unexpectedly losing track of time while using screens for non-essential entertainment?</div><div class="rating-group" data-qid="18"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">19.</span> How dependent do you feel on your devices to feel entertained, relaxed, or mentally engaged?</div><div class="rating-group" data-qid="19"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">20.</span> To what extent do you feel that screen time interrupts your ability to be present or engage in real-life conversations?</div><div class="rating-group" data-qid="20"></div></div>
+    </div>
 
-        <!-- ========================================================= -->
-        <!-- PAGE 7: SUMMARY (final) -->
-        <div id="page-summary" class="page">
-            <h2><i class="fas fa-chart-pie"></i> Summary & results</h2>
-            <div id="summary-output">
-                <i class="fas fa-chart-simple"></i>
-                <span id="summaryText">No ratings yet. Complete all questions to see summary.</span>
-            </div>
-            <div style="background:#1f2a2e; border-radius:30px; padding:20px; margin-top:10px;">
-                <p><i class="fas fa-info-circle" style="color:#7aa5b9;"></i> This is the final page. You can go back and adjust any rating.</p>
-                <button class="btn-secondary" id="clearAllBtn" style="margin-top:12px;"><i class="fas fa-undo-alt"></i> Clear all & restart</button>
-            </div>
-        </div>
+    <!-- ========== PAGE 5 · PHYSICAL ========== -->
+    <div id="page-physical" class="page">
+      <h2><i class="fas fa-running"></i> Physical Activity</h2>
+      <div class="question-block"><div class="question-text"><span class="qnum">21.</span> How would you rate your ability to maintain a fast pace when walking or moving around for 10 minutes or more without becoming winded?</div><div class="rating-group" data-qid="21"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">22.</span> To what extent do you feel confident and stable in your physical body when bending, lifting, or reaching?</div><div class="rating-group" data-qid="22"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">23.</span> How much do you naturally seek out or enjoy physical activities during your day?</div><div class="rating-group" data-qid="23"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">24.</span> How would you rate your physical strength when it comes to carrying/lifting objects?</div><div class="rating-group" data-qid="24"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">25.</span> How frequently does your daily routine require you to breathe heavily, sweat, or get your heart rate up?</div><div class="rating-group" data-qid="25"></div></div>
+    </div>
 
-        <!-- ========================================================= -->
-        <!-- NAVIGATION (shared) -->
-        <div class="nav-bar">
-            <button class="nav-btn" id="prevBtn" disabled><i class="fas fa-arrow-left"></i> Previous</button>
-            <span id="pageIndicator" style="color:#aaa; font-size:18px;">1 / 8</span>
-            <button class="nav-btn primary" id="nextBtn">Next <i class="fas fa-arrow-right"></i></button>
-        </div>
-        <div id="navError" style="text-align:center; margin-top:8px;"></div>
+    <!-- ========== PAGE 6 · EMOTIONAL ========== -->
+    <div id="page-emotional" class="page">
+      <h2><i class="fas fa-smile"></i> Emotional / Mental</h2>
+      <div class="question-block"><div class="question-text"><span class="qnum">26.</span> How much have you felt naturally interested and engaged in the things around you?</div><div class="rating-group" data-qid="26"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">27.</span> How often have you felt nervous, restless, or on edge?</div><div class="rating-group" data-qid="27"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">28.</span> On average, how confident and comfortable do you feel in your own skin right now?</div><div class="rating-group" data-qid="28"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">29.</span> How often have you felt easily annoyed or frustrated by small things?</div><div class="rating-group" data-qid="29"></div></div>
+      <div class="question-block"><div class="question-text"><span class="qnum">30.</span> How often have you felt easily annoyed or frustrated by small things? (duplicate)</div><div class="rating-group" data-qid="30"></div></div>
+    </div>
 
-    </div> <!-- /sub-main -->
+    <!-- ========== PAGE 7 · SUMMARY ========== -->
+    <div id="page-summary" class="page">
+      <h2><i class="fas fa-chart-pie"></i> Summary & results</h2>
+      <div id="summary-output">
+        <i class="fas fa-chart-simple"></i>
+        <span id="summaryText">No ratings yet. Complete all questions to see summary.</span>
+      </div>
+      <div style="background:#1f2a2e; border-radius:30px; padding:20px; margin-top:10px;">
+        <p><i class="fas fa-info-circle" style="color:#7aa5b9;"></i> This is the final page. You can go back and adjust any rating.</p>
+        <button class="btn-secondary" id="clearAllBtn" style="margin-top:12px;"><i class="fas fa-undo-alt"></i> Clear all & restart</button>
+      </div>
+    </div>
+
+    <!-- ========== NAVIGATION ========== -->
+    <div class="nav-bar">
+      <button class="nav-btn" id="prevBtn" disabled><i class="fas fa-arrow-left"></i> Previous</button>
+      <span id="pageIndicator" style="color:#aaa; font-size:18px;">1 / 8</span>
+      <button class="nav-btn primary" id="nextBtn">Next <i class="fas fa-arrow-right"></i></button>
+    </div>
+    <div id="navError" style="text-align:center; margin-top:8px;"></div>
+
+  </div> <!-- /sub-main -->
 </div> <!-- /main -->
 
 <script>
-    (function() {
-        // ---------- page order ----------
-        const pageIds = [
-            'page-intro',
-            'page-sleep',
-            'page-water',
-            'page-stress',
-            'page-screen',
-            'page-physical',
-            'page-emotional',
-            'page-summary'
-        ];
-        const totalPages = pageIds.length;
-        let currentPageIndex = 0;
+  (function() {
+    const pageIds = [
+      'page-intro',
+      'page-sleep',
+      'page-water',
+      'page-stress',
+      'page-screen',
+      'page-physical',
+      'page-emotional',
+      'page-summary'
+    ];
+    const totalPages = pageIds.length;
+    let currentPageIndex = 0;
 
-        // DOM elements
-        const pages = document.querySelectorAll('.page');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const indicator = document.getElementById('pageIndicator');
-        const progressBar = document.getElementById('progress-bar');
-        const startBtn = document.getElementById('startBtn');
-        const navError = document.getElementById('navError');
+    const pages = document.querySelectorAll('.page');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const indicator = document.getElementById('pageIndicator');
+    const progressBar = document.getElementById('progress-bar');
+    const startBtn = document.getElementById('startBtn');
+    const navError = document.getElementById('navError');
+    const summarySpan = document.getElementById('summaryText');
+    const clearAllBtn = document.getElementById('clearAllBtn');
 
-        // rating storage
-        const ratingData = {};
+    const ratingData = {};
 
-        // ---------- generate rating buttons (1-10) ----------
-        const questionGroups = document.querySelectorAll('.rating-group');
-        questionGroups.forEach(group => {
-            const qid = group.dataset.qid;
-            for (let i = 1; i <= 10; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'rating-btn';
-                btn.textContent = i;
-                btn.dataset.value = i;
-                btn.dataset.qid = qid;
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const parentGroup = this.closest('.rating-group');
-                    parentGroup.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    ratingData[qid] = parseInt(this.dataset.value, 10);
-                    updateSummaryText();
-                    updateProgress();
-                    clearNavError();
-                });
-                group.appendChild(btn);
-            }
-            // labels
-            const low = document.createElement('span');
-            low.className = 'rating-label';
-            low.textContent = 'min';
-            const high = document.createElement('span');
-            high.className = 'rating-label';
-            high.textContent = 'max';
-            group.prepend(low);
-            group.appendChild(high);
+    // generate rating buttons 1-10
+    document.querySelectorAll('.rating-group').forEach(group => {
+      const qid = group.dataset.qid;
+      for (let i = 1; i <= 10; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'rating-btn';
+        btn.textContent = i;
+        btn.dataset.value = i;
+        btn.dataset.qid = qid;
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const parent = this.closest('.rating-group');
+          parent.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          ratingData[qid] = parseInt(this.dataset.value, 10);
+          updateSummaryText();
+          updateProgress();
+          clearNavError();
         });
+        group.appendChild(btn);
+      }
+      // min/max labels
+      const low = document.createElement('span');
+      low.className = 'rating-label';
+      low.textContent = 'min';
+      const high = document.createElement('span');
+      high.className = 'rating-label';
+      high.textContent = 'max';
+      group.prepend(low);
+      group.appendChild(high);
+    });
 
-        // ---------- validation: check if all ratings on current page are answered ----------
-        function isCurrentPageComplete() {
-            const currentPage = document.querySelector('.page.active');
-            if (!currentPage) return false;
+    // check if current page is complete
+    function isCurrentPageComplete() {
+      const current = document.querySelector('.page.active');
+      if (!current) return false;
+      if (current.id === 'page-intro') {
+        const name = document.getElementById('intro-name');
+        const age = document.getElementById('intro-age');
+        const program = document.getElementById('intro-program');
+        if (!name.value.trim()) return false;
+        if (!age.value || parseInt(age.value) <= 0) return false;
+        // program select must have a valid value (not empty or placeholder)
+        if (!program.value || program.value === '') return false;
+        return true;
+      }
+      if (current.id === 'page-summary') return true;
+      const groups = current.querySelectorAll('.rating-group');
+      for (let g of groups) {
+        if (!g.querySelector('.rating-btn.selected')) return false;
+      }
+      return true;
+    }
 
-            // For intro page: check text inputs
-            if (currentPage.id === 'page-intro') {
-                const name = document.getElementById('intro-name');
-                const age = document.getElementById('intro-age');
-                const program = document.getElementById('intro-program');
-                // Name must not be empty
-                if (!name.value.trim()) return false;
-                // Age must be a number > 0
-                if (!age.value || parseInt(age.value) <= 0) return false;
-                // Program must not be empty
-                if (!program.value.trim()) return false;
-                return true;
-            }
+    function showNavError(msg) {
+      navError.innerHTML = `<span class="error-msg"><i class="fas fa-exclamation-circle"></i> ${msg}</span>`;
+    }
+    function clearNavError() { navError.innerHTML = ''; }
 
-            // For summary page: always allow navigation (no ratings to check)
-            if (currentPage.id === 'page-summary') return true;
+    // update summary (NO average, only answered count + last 3)
+    function updateSummaryText() {
+      const entries = Object.entries(ratingData);
+      if (entries.length === 0) {
+        summarySpan.textContent = 'No ratings yet. Complete all questions to see summary.';
+        return;
+      }
+      const answered = entries.length;
+      const total = 30;
+      const lastThree = entries.slice(-3).map(([q,v]) => `Q${q}:${v}`).join(' · ');
+      summarySpan.innerHTML = `
+        <span style="background:#1f2a2e; padding:2px 14px; border-radius:30px;">
+          <i class="fas fa-check-circle" style="color:#7aa5b9;"></i> ${answered}/${total}
+        </span>
+        <span style="background:#1f2a2e; padding:2px 14px; border-radius:30px; font-size:0.9em;">
+          ${lastThree || '—'}
+        </span>
+      `;
+    }
 
-            // For other pages: check that all rating groups have a selected button
-            const groups = currentPage.querySelectorAll('.rating-group');
-            for (let group of groups) {
-                const selected = group.querySelector('.rating-btn.selected');
-                if (!selected) return false;
-            }
-            return true;
+    function updateProgress() {
+      const answered = Object.keys(ratingData).length;
+      const total = 30;
+      const pct = Math.min(100, Math.round((answered / total) * 100));
+      progressBar.style.width = pct + '%';
+    }
+
+    // clear all and restart
+    function clearAllAndRestart() {
+      document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+      for (let key in ratingData) delete ratingData[key];
+      document.getElementById('intro-name').value = '';
+      document.getElementById('intro-age').value = '';
+      document.getElementById('intro-program').selectedIndex = 0; // reset select
+      document.getElementById('intro-email').value = '';
+      updateSummaryText();
+      updateProgress();
+      clearNavError();
+      goToPage(0);
+    }
+
+    // navigation
+    function goToPage(index) {
+      if (index < 0 || index >= totalPages) return;
+      if (index > currentPageIndex) {
+        if (!isCurrentPageComplete()) {
+          showNavError('Please answer all questions on this page before proceeding.');
+          return;
         }
+      }
+      clearNavError();
+      pages.forEach(p => p.classList.remove('active'));
+      const target = document.getElementById(pageIds[index]);
+      if (target) target.classList.add('active');
+      currentPageIndex = index;
 
-        // ---------- show error message ----------
-        function showNavError(message) {
-            navError.innerHTML = `<span class="error-msg"><i class="fas fa-exclamation-circle"></i> ${message}</span>`;
-        }
+      prevBtn.disabled = (index === 0);
+      nextBtn.disabled = (index === totalPages - 1);
+      nextBtn.innerHTML = (index === totalPages - 1) ? 'Finish <i class="fas fa-check"></i>' : 'Next <i class="fas fa-arrow-right"></i>';
+      indicator.textContent = `${index+1} / ${totalPages}`;
+      updateProgress();
+      if (pageIds[index] === 'page-summary') updateSummaryText();
+    }
 
-        function clearNavError() {
-            navError.innerHTML = '';
-        }
+    function nextPage() { if (currentPageIndex < totalPages-1) goToPage(currentPageIndex+1); }
+    function prevPage() { if (currentPageIndex > 0) goToPage(currentPageIndex-1); }
 
-        // ---------- update summary text (on final page) - NO AVERAGE ----------
-        const summarySpan = document.getElementById('summaryText');
+    // event listeners
+    nextBtn.addEventListener('click', nextPage);
+    prevBtn.addEventListener('click', prevPage);
 
-        function updateSummaryText() {
-            const entries = Object.entries(ratingData);
-            if (entries.length === 0) {
-                summarySpan.textContent = 'No ratings yet. Complete all questions to see summary.';
-                return;
-            }
-            const answered = entries.length;
-            const total = 30;
-            // Show only answered count and last 3 ratings (no average)
-            const lastThree = entries.slice(-3).map(([q, v]) => `Q${q}:${v}`).join(' · ');
-            summarySpan.innerHTML = `
-                <span style="background:#1f2a2e; padding:2px 14px; border-radius:30px;">
-                    <i class="fas fa-check-circle" style="color:#7aa5b9;"></i> ${answered}/${total}
-                </span>
-                <span style="background:#1f2a2e; padding:2px 14px; border-radius:30px; font-size:0.9em;">
-                    ${lastThree || '—'}
-                </span>
-            `;
-        }
+    startBtn.addEventListener('click', function() {
+      if (!isCurrentPageComplete()) {
+        showNavError('Please fill in all required fields (Name, Age, Programme) before starting.');
+        return;
+      }
+      goToPage(1);
+    });
 
-        // ---------- update progress bar ----------
-        function updateProgress() {
-            const answered = Object.keys(ratingData).length;
-            const total = 30;
-            const pct = Math.min(100, Math.round((answered / total) * 100));
-            progressBar.style.width = pct + '%';
-        }
+    clearAllBtn.addEventListener('click', clearAllAndRestart);
 
-        // ---------- clear all ratings and go to intro page ----------
-        function clearAllAndRestart() {
-            // Remove selected class from all rating buttons
-            document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
-            // Clear the rating data
-            for (let key in ratingData) {
-                delete ratingData[key];
-            }
-            // Clear intro text inputs
-            document.getElementById('intro-name').value = '';
-            document.getElementById('intro-age').value = '';
-            document.getElementById('intro-program').value = '';
-            document.getElementById('intro-email').value = '';
-            // Update UI
-            updateSummaryText();
-            updateProgress();
-            clearNavError();
-            // Navigate to intro page (page 0)
-            goToPage(0);
-        }
+    // clear error on intro input/select change
+    document.querySelectorAll('.intro-input-group input, .intro-input-group select').forEach(el => {
+      el.addEventListener('input', clearNavError);
+      el.addEventListener('change', clearNavError);
+    });
 
-        // ---------- navigation ----------
-        function goToPage(index) {
-            if (index < 0 || index >= totalPages) return;
-            
-            // Check if we're trying to go forward and current page is complete
-            if (index > currentPageIndex) {
-                if (!isCurrentPageComplete()) {
-                    showNavError('Please answer all questions on this page before proceeding.');
-                    return;
-                }
-            }
-            
-            clearNavError();
-            
-            // hide all
-            pages.forEach(p => p.classList.remove('active'));
-            // show target
-            const target = document.getElementById(pageIds[index]);
-            if (target) target.classList.add('active');
-            currentPageIndex = index;
+    // keyboard arrows
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' && !e.ctrlKey && !e.metaKey && !nextBtn.disabled) nextBtn.click();
+      else if (e.key === 'ArrowLeft' && !e.ctrlKey && !e.metaKey && !prevBtn.disabled) prevBtn.click();
+    });
 
-            // update buttons
-            prevBtn.disabled = (index === 0);
-            nextBtn.disabled = (index === totalPages - 1);
-            if (index === totalPages - 1) {
-                nextBtn.innerHTML = 'Finish <i class="fas fa-check"></i>';
-            } else {
-                nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
-            }
-            // indicator
-            indicator.textContent = `${index+1} / ${totalPages}`;
-            // update progress
-            updateProgress();
-            // if on summary page, refresh summary
-            if (pageIds[index] === 'page-summary') {
-                updateSummaryText();
-            }
-        }
-
-        function nextPage() {
-            if (currentPageIndex < totalPages - 1) {
-                goToPage(currentPageIndex + 1);
-            }
-        }
-
-        function prevPage() {
-            if (currentPageIndex > 0) {
-                goToPage(currentPageIndex - 1);
-            }
-        }
-
-        // event listeners
-        nextBtn.addEventListener('click', nextPage);
-        prevBtn.addEventListener('click', prevPage);
-
-        // start button (from intro)
-        startBtn.addEventListener('click', function() {
-            if (!isCurrentPageComplete()) {
-                showNavError('Please fill in all required fields (Name, Age, Programme) before starting.');
-                return;
-            }
-            goToPage(1); // go to sleep page
-        });
-
-        // Clear all button - now clears everything and goes to intro
-        document.getElementById('clearAllBtn').addEventListener('click', clearAllAndRestart);
-
-        // Real-time validation on intro inputs (clear error when user types)
-        document.querySelectorAll('.intro-input-group input').forEach(input => {
-            input.addEventListener('input', function() {
-                clearNavError();
-            });
-        });
-
-        // keyboard support
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowRight' && !e.ctrlKey && !e.metaKey) {
-                if (!nextBtn.disabled) nextBtn.click();
-            } else if (e.key === 'ArrowLeft' && !e.ctrlKey && !e.metaKey) {
-                if (!prevBtn.disabled) prevBtn.click();
-            }
-        });
-
-        // ---------- initial state ----------
-        goToPage(0); // start at intro
-        updateProgress();
-        updateSummaryText();
-    })();
+    // init
+    goToPage(0);
+    updateProgress();
+    updateSummaryText();
+  })();
 </script>
-
 </body>
 </html>
