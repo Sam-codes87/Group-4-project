@@ -1,136 +1,100 @@
+from flask import Flask, request, jsonify, render_template
+from pymongo import MongoClient
+from datetime import datetime
 import requests
 
-url = "http://localhost:11434/api/generate"
+app = Flask(__name__)
 
-# === SYSTEM PROMPT ===
-system_prompt = """
-You are a wellbeing assistant talking to a student.
-
-Style:
-- Natural, casual, human
-- Short responses (2–4 sentences)
-- Slightly warm, not robotic
-
-Rules:
-- Do not act like a doctor
-- Do not lecture
-- Be conversational, not formal
-- Ask follow-up questions sometimes
-
-Goal:
-Help the user reflect on their wellbeing based on known data.
-"""
-
-# === SCORING ===
-
-
-def calculate_score(sleep, stress, mood, activity):
-    sleep_score = min(sleep / 8, 1) * 100
-    stress_score = (6 - stress) / 5 * 100
-    mood_score = (mood / 5) * 100
-    activity_score = min(activity / 60, 1) * 100
-
-    total = (
-        sleep_score * 0.25 +
-        stress_score * 0.30 +
-        mood_score * 0.25 +
-        activity_score * 0.20
+# MongoDB connection
+try:
+    client = MongoClient(
+        "mongodb+srv://amirsampoorjabar_db_user:27091387AmirVlad@well-being-cluster.gja6mwh.mongodb.net/",
+        serverSelectionTimeoutMS=5000
     )
+    client.admin.command('ping')
+    print("✅ Successfully connected to MongoDB!")
 
-    return round(total, 1)
+    db = client["group_4_project"]
+    collection = db["responses"]
+    reflection_collection = db["reflections"]
 
+except Exception as e:
+    print(f"❌ MongoDB connection error: {e}")
+    collection = None
+    reflection_collection = None
 
-def classify(score):
-    if score > 75:
-        return "good"
-    elif score > 50:
-        return "moderate"
-    else:
-        return "low"
-
-# === AI CALL ===
-
-
-def ask_ai(prompt):
-    response = requests.post(
-        url,
-        json={
-            "model": "qwen",
-            "prompt": prompt,
-            "stream": False,
-            "options": {
-                "temperature": 0.7,
-                "max_tokens": 120
-            }
-        }
-    )
-    return response.json()["response"]
+OLLAMA_URL = "http://localhost:11434/api/generate"
 
 
-# === STEP 1: INITIAL DATA COLLECTION ===
-print("\n--- Quick Wellbeing Check ---")
+@app.route("/")
+def index():
+    return render_template("index.html")
 
-sleep = float(input("Hours of sleep: "))
-stress = int(input("Stress (1-5): "))
-mood = int(input("Mood (1-5): "))
-activity = int(input("Activity (minutes): "))
 
-data = {
-    "sleep": sleep,
-    "stress": stress,
-    "mood": mood,
-    "activity": activity
-}
+@app.route("/submit", methods=["POST"])
+def submit():
+    if collection is None:
+        return jsonify({"status": "error", "message": "Database unavailable"}), 503
+    try:
+        data = request.get_json()
+        if not data or not data.get('full_name'):
+            return jsonify({"status": "error", "message": "Invalid data"}), 400
 
-score = calculate_score(sleep, stress, mood, activity)
-state = classify(score)
+        data['server_submitted_at'] = datetime.now()
+        data['submission_date'] = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S")
+        result = collection.insert_one(data)
+        return jsonify({"status": "success", "id": str(result.inserted_id)}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
-print(f"\n[Internal] Score: {score} → {state.upper()}")
 
-# === INITIAL RESPONSE ===
-initial_prompt = f"""
-{system_prompt}
+@app.route("/submit-reflection", methods=["POST"])
+def submit_reflection():
+    if reflection_collection is None:
+        return jsonify({"status": "error", "message": "Database unavailable"}), 503
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"status": "error", "message": "No data"}), 400
 
-User wellbeing data:
-- Sleep: {sleep} hours
-- Stress: {stress}/5
-- Mood: {mood}/5
-- Activity: {activity} minutes
+        data['submitted_at'] = datetime.now()
+        data['submission_date'] = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S")
+        result = reflection_collection.insert_one(data)
+        return jsonify({"status": "success", "id": str(result.inserted_id)}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
-State: {state}
 
-Start the conversation naturally by reflecting on their state.
-"""
+@app.route("/api/chat", methods=["POST"])
+def chat():
+    try:
+        data = request.get_json()
+        prompt = data.get('prompt', '')
+        if not prompt:
+            return jsonify({"error": "No prompt"}), 400
 
-reply = ask_ai(initial_prompt)
-print("\nAI:", reply)
+        response = requests.post(
+            OLLAMA_URL,
+            json={
+                "model": "qwen",
+                "prompt": prompt,
+                "stream": False,
+                "options": {"temperature": 0.7, "max_tokens": 200}
+            },
+            timeout=30
+        )
 
-# === STEP 2: CONVERSATION LOOP ===
-history = f"AI: {reply}"
+        if response.status_code != 200:
+            return jsonify({"error": f"Ollama error: {response.status_code}"}), 500
 
-while True:
-    user_input = input("\nYou: ")
+        return jsonify({"response": response.json().get("response", "")})
+    except requests.exceptions.ConnectionError:
+        return jsonify({"error": "Cannot connect to Ollama"}), 503
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-    full_prompt = f"""
-{system_prompt}
 
-Known wellbeing data:
-- Sleep: {sleep}
-- Stress: {stress}
-- Mood: {mood}
-- Activity: {activity}
-- State: {state}
-
-Conversation so far:
-{history}
-
-User: {user_input}
-AI:
-"""
-
-    reply = ask_ai(full_prompt)
-
-    print("\nAI:", reply)
-
-    # update memory (trim to avoid overload)
-    history = (history + f"\nUser: {user_input}\nAI: {reply}")[-2000:]
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)

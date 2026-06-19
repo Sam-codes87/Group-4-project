@@ -4,71 +4,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/static/css/assest.css">
+    <title>Wellbeing Project</title>
+    <link rel="stylesheet" href="/static/css/asset.css">
 </head>
 
 <body>
     <div id="main">
         <div id="sub-main">
-            <div id="sign-up">
-                <p>1. What is your full name?</p>
-                <p>2. What is your age?</p>
-                <p>3. What academical programme are you currently enrolled in?</p>
-                <p>4. What is your Email?(Optional)</p>
-                <p>I am aware that I have the right to withdraw at any time of the experiemnt. Your information will
-                    remain confidential and only used for academical purposes only.</p>
+
+            <!-- Theme Toggle -->
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon" id="themeIcon"></i>
+                <span id="themeLabel">Dark</span>
+            </button>
+
+            <!-- progress bar -->
+            <div id="progress-container">
+                <div id="progress-bar" style="width:0%;"></div>
             </div>
-            <div id="Wellbeing_questionnaire">
-                <h2>The Well-being questionnaire</h2>
-                <h4>Sleep Time</h4>
-                <p>1. How much sleep do you usually get?</p>
-                <p>2. How much difficulty do you have falling asleep at the beginning of the night?</p>
-                <p>3. How would you rate your overall sleep quality over the past month?</p>
-                <p>4. How often do you wake up in the middle of the night and struggle to get back to sleep?</p>
-                <p>5. How sleepy or exhausted do you feel during the daytime hours?</p>
-                <h4>Water Intake</h4>
-                <p>6. In the past month, how often have you felt physically dehydrated, experiencing symptoms like dry
-                    mouth, lightheadedness, or sudden headaches?</p>
-                <p>7. In the past month, how often have you drunk around 2 litres of water daily?</p>
-                <p>8. In the past month, how often has a lack of hydration made you feel irritable, overwhelmed, or
-                    unable to cope with daily tasks?</p>
-                <h4>Stress</h4>
-                <p>9. How often have you felt confident about your ability to handle your personal problems?</p>
-                <p>10. How often have you felt that things were going your way?</p>
-                <p>11. How often have you felt difficulties were piling up so high that you could not overcome them?</p>
-                <p>12. How often have you been upset because of something that happened unexpectedly?</p>
-                <p>13. How often have you felt that you were unable to control the important things in your life?</p>
-                <p>14. How often have you felt nervous and "stressed"?</p>
-                <p>15. How often have you found that you could not cope with all the things that you had to do?</p>
-                <h4>Screen Time</h4>
-                <p>16. On a typical day, would you consider the total amount of time you spend looking at digital
-                    screens (phones, TVs, computers) healthy?</p>
-                <p>17. When you are trying to read a book, study, or complete a task, how often do you feel the urge to
-                    check your screens?</p>
-                <p>18. How frequently do you find yourself unexpectedly losing track of time while using screens for
-                    non-essential entertainment?</p>
-                <p>19. How dependent do you feel on your devices to feel entertained, relaxed, or mentally engaged?</p>
-                <p>20. To what extent do you feel that screen time interrupts your ability to be present or engage in
-                    real-life conversations?</p>
-                <h4>Physical Activity</h4>
-                <p>21. How would you rate your ability to maintain a fast pace when walking or moving around for 10
-                    minutes or more without becoming winded?</p>
-                <p>22. To what extent do you feel confident and stable in your physical body when bending, lifting, or
-                    reaching?</p>
-                <p>23. How much do you naturally seek out or enjoy physical activities during your day?</p>
-                <p>24. How would you rate your physical strength when it comes to carrying/lifting objects?</p>
-                <p>25. How frequently does your daily routine require you to breathe heavily, sweat, or get your heart
-                    rate up?</p>
-                <h4>Emotional/Mental state</h4>
-                <p>26. How much have you felt naturally interested and engaged in the things around you?</p>
-                <p>27. How often have you felt nervous, restless, or on edge?</p>
-                <p>28. On average, how confident and comfortable do you feel in your own skin right now?</p>
-                <p>29. How often have you felt easily annoyed or frustrated by small things? </p>
-                <p>30. How often have you felt easily annoyed or frustrated by small things? </p>
+
+            <!-- ========== PAGE 0 · INTRO ========== -->
+            <div id="page-intro" class="page active">
+                <h2><i class="fas fa-clipboard-list" style="margin-right:12px;"></i>Welcome · Introduction</h2>
+                <div id="sign-up">
+                    <div class="question-block">
+                        <div class="question-text"><span class="qnum">1.</span> What is your full name?</div>
+                        <div class="intro-input-group"><input type="text" id="intro-name"
+                                placeholder="Enter your full name..."></div>
+                    </div>
+                    <div class="question-block">
+                        <div class="question-text"><span class="qnum">2.</span> What is your age?</div>
+                        <div class="intro-input-group"><input type="number" id="intro-age"
+                                placeholder="Enter your age..." min="1" max="120"></div>
+                    </div>
+                    <div class="question-block">
+                        <div class="question-text"><span class="qnum">3.</span> Which programme are you currently
+                            enrolled in?</div>
+                        <div class="intro-input-group">
+                            <select id="intro-program">
+                                <option value="" disabled selected>Select your programme</option>
+                                <option value="A-Level">A-Level</option>
+                                <option value="IB">IB</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <div class="question-text"><span class="qnum">4.</span> What is your Email? (Optional)</div>
+                        <div class="intro-input-group"><input type="email" id="intro-email"
+                                placeholder="your@email.com (optional)"></div>
+                    </div>
+                    <p
+                        style="margin-top:20px; background:var(--bg-chat); border-left:4px solid var(--accent); padding:14px; border-radius:8px; color:var(--text-primary);">
+                        <i class="fas fa-check-circle" style="color:var(--accent); margin-right:8px;"></i>
+                        I am aware that I have the right to withdraw at any time of the experiment. Your information
+                        will remain confidential and only used for academical purposes only.
+                    </p>
+                </div>
+                <div style="margin-top:20px; text-align:right;">
+                    <button class="nav-btn primary" id="startBtn"><i class="fas fa-arrow-right"></i> Start
+                        questionnaire</button>
+                </div>
             </div>
-        </div>
-    </div>
+
+            <!-- ========== PAGE 1 · SLEEP ========== -->
+            <div id="page-sleep" class="page">
+                <h2><i class="fas fa-moon"></i> Sleep</h2>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">1.</span> How much sleep do you usually get? (hours)
+                    </div>
+                    <div class="rating-group" data-qid="sleep" data-min="0-4 hrs" data-max="9+ hrs"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">2.</span> How much difficulty do you have falling
+                        asleep at the beginning of the night?</div>
+                    <div class="rating-group" data-qid="sleep_difficulty" data-min="no difficulty"
+                        data-max="extreme difficulty"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">3.</span> How would you rate your overall sleep
+                        quality over the past month?</div>
+                    <div class="rating-group" data-qid="sleep_quality" data-min="very poor" data-max="excellent"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">4.</span> How often do you wake up in the middle of
+                        the night and struggle to get back to sleep?</div>
+                    <div class="rating-group" data-qid="sleep_wake" data-min="never" data-max="always"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">5.</span> How sleepy or exhausted do you feel during
+                        the daytime hours?</div>
+                    <div class="rating-group" data-qid="sleep_exhausted" data-min="not at all" data-max="extremely">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== PAGE 2 · WATER ========== -->
+            <div id="page-water" class="page">
+                <h2><i class="fas fa-tint"></i> Water Intake</h2>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">6.</span> In the past month, how often have you felt
+                        physically dehydrated…</div>
+                    <div class="rating-group" data-qid="water_dehydrated" data-min="never" data-max="very often"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">7.</span> In the past month, how often have you drunk
+                        around 2 litres of water daily?</div>
+                    <div class="rating-group" data-qid="water_intake" data-min="rarely" data-max="always"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">8.</span> In the past month, how often has a lack of
+                        hydration made you feel irritable…</div>
+                    <div class="rating-group" data-qid="water_irritable" data-min="never" data-max="constantly"></div>
+                </div>
+            </div>
+
+            <!-- ========== PAGE 3 · STRESS ========== -->
+            <div id="page-stress" class="page">
+                <h2><i class="fas fa-brain"></i> Stress</h2>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">9.</span> How often have you felt confident about your
+                        ability to handle your personal problems?</div>
+                    <div class="rating-group" data-qid="stress_confident" data-min="never" data-max="always"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">10.</span> How often have you felt that things were
+                        going your way?</div>
+                    <div class="rating-group" data-qid="stress_going_well" data-min="never" data-max="always"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">11.</span> How often have you felt difficulties were
+                        piling up so high that you could not overcome them?</div>
+                    <div class="rating-group" data-qid="stress_overwhelmed" data-min="never" data-max="very often">
+                    </div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">12.</span> How often have you been upset because of
+                        something that happened unexpectedly?</div>
+                    <div class="rating-group" data-qid="stress_upset" data-min="never" data-max="very often"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">13.</span> How often have you felt that you were
+                        unable to control the important things in your life?</div>
+                    <div class="rating-group" data-qid="stress_uncontrolled" data-min="never" data-max="very often">
+                    </div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">14.</span> How often have you felt nervous and
+                        "stressed"?</div>
+                    <div class="rating-group" data-qid="stress_nervous" data-min="never" data-max="always"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">15.</span> How often have you found that you could not
+                        cope with all the things that you had to do?</div>
+                    <div class="rating-group" data-qid="stress_cope" data-min="never" data-max="very often"></div>
+                </div>
+            </div>
+
+            <!-- ========== PAGE 4 · SCREEN ========== -->
+            <div id="page-screen" class="page">
+                <h2><i class="fas fa-mobile-alt"></i> Screen Time</h2>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">16.</span> On a typical day, would you consider the
+                        total amount of time you spend looking at digital screens healthy?</div>
+                    <div class="rating-group" data-qid="screen_healthy" data-min="not at all" data-max="very healthy">
+                    </div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">17.</span> When you are trying to read a book, study,
+                        or complete a task, how often do you feel the urge to check your screens?</div>
+                    <div class="rating-group" data-qid="screen_urge" data-min="never" data-max="constantly"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">18.</span> How frequently do you find yourself
+                        unexpectedly losing track of time while using screens for non-essential entertainment?</div>
+                    <div class="rating-group" data-qid="screen_lost_time" data-min="rarely" data-max="very often"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">19.</span> How dependent do you feel on your devices
+                        to feel entertained, relaxed, or mentally engaged?</div>
+                    <div class="rating-group" data-qid="screen_dependent" data-min="not dependent"
+                        data-max="completely dependent"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">20.</span> To what extent do you feel that screen time
+                        interrupts your ability to be present or engage in real-life conversations?</div>
+                    <div class="rating-group" data-qid="screen_interrupt" data-min="not at all" data-max="very much">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== PAGE 5 · PHYSICAL ========== -->
+            <div id="page-physical" class="page">
+                <h2><i class="fas fa-running"></i> Physical Activity</h2>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">21.</span> How would you rate your ability to maintain
+                        a fast pace when walking or moving around for 10 minutes or more without becoming winded?</div>
+                    <div class="rating-group" data-qid="physical_endurance" data-min="very poor" data-max="excellent">
+                    </div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">22.</span> To what extent do you feel confident and
+                        stable in your physical body when bending, lifting, or reaching?</div>
+                    <div class="rating-group" data-qid="physical_confidence" data-min="not confident"
+                        data-max="very confident"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">23.</span> How much do you naturally seek out or enjoy
+                        physical activities during your day?</div>
+                    <div class="rating-group" data-qid="physical_enjoy" data-min="not at all" data-max="very much">
+                    </div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">24.</span> How would you rate your physical strength
+                        when it comes to carrying/lifting objects?</div>
+                    <div class="rating-group" data-qid="physical_strength" data-min="very weak" data-max="very strong">
+                    </div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">25.</span> How frequently does your daily routine
+                        require you to breathe heavily, sweat, or get your heart rate up?</div>
+                    <div class="rating-group" data-qid="physical_activity_freq" data-min="rarely" data-max="very often">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== PAGE 6 · EMOTIONAL ========== -->
+            <div id="page-emotional" class="page">
+                <h2><i class="fas fa-smile"></i> Emotional / Mental</h2>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">26.</span> How much have you felt naturally interested
+                        and engaged in the things around you?</div>
+                    <div class="rating-group" data-qid="emotional_engaged" data-min="not at all" data-max="very much">
+                    </div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">27.</span> How often have you felt nervous, restless,
+                        or on edge?</div>
+                    <div class="rating-group" data-qid="emotional_restless" data-min="never" data-max="always"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">28.</span> On average, how confident and comfortable
+                        do you feel in your own skin right now?</div>
+                    <div class="rating-group" data-qid="emotional_comfortable" data-min="not at all"
+                        data-max="very much"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">29.</span> How often have you felt easily annoyed or
+                        frustrated by small things?</div>
+                    <div class="rating-group" data-qid="emotional_annoyed" data-min="never" data-max="always"></div>
+                </div>
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">30.</span> How often have you felt easily annoyed or
+                        frustrated by small things? (duplicate)</div>
+                    <div class="rating-group" data-qid="emotional_annoyed2" data-min="never" data-max="always"></div>
+                </div>
+            </div>
+
+            <!-- ========== PAGE 7 · LIVE REPORT ========== -->
+            <div id="page-report" class="page">
+                <h2><i class="fas fa-chart-pie"></i> Live Report Dashboard</h2>
+                <div id="summary-output">
+                    <i class="fas fa-chart-simple"></i>
+                    <span id="reportSummary">Complete the questionnaire to see your live report.</span>
+                </div>
+                <div id="reportContainer">
+                    <div class="report-grid" id="reportGrid">
+                        <!-- Dynamic report cards will be inserted here -->
+                    </div>
+                </div>
+                <div class="submission-section">
+                    <p><i class="fas fa-info-circle" style="color:var(--accent);"></i> This report shows your scores
+                        across all wellbeing areas based on your questionnaire answers.</p>
+                    <button class="btn-secondary" id="clearAllBtn2" style="margin-top:12px;"><i
+                            class="fas fa-undo-alt"></i> Clear all & restart</button>
+                    <button class="btn-secondary" id="submitToDbBtn2"
+                        style="margin-top:12px; margin-left:12px; background:var(--btn-primary); border-color:var(--accent); color:white;">
+                        <i class="fas fa-database"></i> Submit to database
+                    </button>
+                    <div id="server-feedback2"><i class="fas fa-circle-info"></i> Click "Submit" to store all answers.
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== PAGE 8 · AI CHAT ========== -->
+            <div id="page-chat" class="page">
+                <h2><i class="fas fa-robot"></i> AI Wellbeing Assistant</h2>
+                <div id="summary-output">
+                    <i class="fas fa-comment-dots"></i>
+                    <span id="chatSummary">Chat with the AI about your wellbeing.</span>
+                </div>
+                <div id="chat-container">
+                    <div id="chat-controls">
+                        <button class="btn-secondary" id="start-chat-btn" style="flex:1;">
+                            <i class="fas fa-play"></i> Start AI Chat
+                        </button>
+                    </div>
+                    <div id="chat-messages">
+                        <div class="chat-message ai">
+                            <i class="fas fa-robot" style="margin-right:8px;"></i>
+                            Complete the questionnaire first, then click "Start AI Chat" to begin.
+                            <span class="msg-time">System</span>
+                        </div>
+                    </div>
+                    <div id="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Ask about your wellbeing..." disabled>
+                        <button id="chat-send-btn" disabled><i class="fas fa-paper-plane"></i> Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== PAGE 9 · REFLECTION ========== -->
+            <div id="page-reflection" class="page">
+                <h2><i class="fas fa-clipboard-check"></i> Reflection Questionnaire</h2>
+                <p style="margin-bottom:20px; color:var(--text-secondary);">Please provide your feedback on the
+                    well-being assessment and recommendations.</p>
+
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">1.</span> Are you satisfied with the results provided
+                        by the test?</div>
+                    <div class="reflection-options" data-qid="reflection_satisfied">
+                        <label><input type="radio" name="reflection_satisfied" value="Very satisfied"> <span>Very
+                                satisfied</span></label>
+                        <label><input type="radio" name="reflection_satisfied" value="Satisfied">
+                            <span>Satisfied</span></label>
+                        <label><input type="radio" name="reflection_satisfied" value="Neutral">
+                            <span>Neutral</span></label>
+                        <label><input type="radio" name="reflection_satisfied" value="Dissatisfied">
+                            <span>Dissatisfied</span></label>
+                        <label><input type="radio" name="reflection_satisfied" value="Very dissatisfied"> <span>Very
+                                dissatisfied</span></label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">2.</span> Did you find the recommendations from the
+                        test useful?</div>
+                    <div class="reflection-options" data-qid="reflection_useful">
+                        <label><input type="radio" name="reflection_useful" value="Very useful"> <span>Very
+                                useful</span></label>
+                        <label><input type="radio" name="reflection_useful" value="Useful"> <span>Useful</span></label>
+                        <label><input type="radio" name="reflection_useful" value="Somewhat useful"> <span>Somewhat
+                                useful</span></label>
+                        <label><input type="radio" name="reflection_useful" value="Not useful"> <span>Not
+                                useful</span></label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">3.</span> Will you follow the recommendations provided
+                        after completing the well-being test?</div>
+                    <div class="reflection-options" data-qid="reflection_follow">
+                        <label><input type="radio" name="reflection_follow" value="Yes definitely"> <span>Yes
+                                definitely</span></label>
+                        <label><input type="radio" name="reflection_follow" value="Probably yes"> <span>Probably
+                                yes</span></label>
+                        <label><input type="radio" name="reflection_follow" value="Not sure"> <span>Not
+                                sure</span></label>
+                        <label><input type="radio" name="reflection_follow" value="Probably not"> <span>Probably
+                                not</span></label>
+                        <label><input type="radio" name="reflection_follow" value="No"> <span>No</span></label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">4.</span> Which recommendations are you most likely to
+                        follow?</div>
+                    <div class="reflection-options" data-qid="reflection_recommendations">
+                        <label><input type="radio" name="reflection_recommendations" value="Improving sleeping habits">
+                            <span>Improving sleeping habits</span></label>
+                        <label><input type="radio" name="reflection_recommendations" value="Managing stress">
+                            <span>Managing stress</span></label>
+                        <label><input type="radio" name="reflection_recommendations" value="Exercising more">
+                            <span>Exercising more</span></label>
+                        <label><input type="radio" name="reflection_recommendations" value="Drinking more water">
+                            <span>Drinking more water</span></label>
+                        <label><input type="radio" name="reflection_recommendations" value="Reducing screen time">
+                            <span>Reducing screen time</span></label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">5.</span> Do you think following these recommendations
+                        can improve your well-being during future exams?</div>
+                    <div class="reflection-options" data-qid="reflection_exams">
+                        <label><input type="radio" name="reflection_exams" value="Yes a lot"> <span>Yes a
+                                lot</span></label>
+                        <label><input type="radio" name="reflection_exams" value="Yes a little"> <span>Yes a
+                                little</span></label>
+                        <label><input type="radio" name="reflection_exams" value="Not really"> <span>Not
+                                really</span></label>
+                        <label><input type="radio" name="reflection_exams" value="No"> <span>No</span></label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">6.</span> Did the test help you identify areas where
+                        you need to improve your lifestyle?</div>
+                    <div class="reflection-options" data-qid="reflection_identify">
+                        <label><input type="radio" name="reflection_identify" value="Yes definitely"> <span>Yes
+                                definitely</span></label>
+                        <label><input type="radio" name="reflection_identify" value="Yes a little"> <span>Yes a
+                                little</span></label>
+                        <label><input type="radio" name="reflection_identify" value="Not really"> <span>Not
+                                really</span></label>
+                        <label><input type="radio" name="reflection_identify" value="No"> <span>No</span></label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">7.</span> Do you think the recommendations are
+                        realistic and easy to follow?</div>
+                    <div class="reflection-options" data-qid="reflection_realistic">
+                        <label><input type="radio" name="reflection_realistic" value="Very realistic"> <span>Very
+                                realistic</span></label>
+                        <label><input type="radio" name="reflection_realistic" value="Mostly realistic"> <span>Mostly
+                                realistic</span></label>
+                        <label><input type="radio" name="reflection_realistic" value="Neutral">
+                            <span>Neutral</span></label>
+                        <label><input type="radio" name="reflection_realistic" value="Difficult to follow">
+                            <span>Difficult to follow</span></label>
+                        <label><input type="radio" name="reflection_realistic" value="Impossible to follow">
+                            <span>Impossible to follow</span></label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">8.</span> How motivated are you to make changes based
+                        on your test results? (1 - not motivated, 10 - very motivated)</div>
+                    <div class="rating-group" data-qid="reflection_motivation" data-min="1" data-max="10"></div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">9.</span> Which aspect of the AI-generated well-being
+                        recommendations did you find most valuable?</div>
+                    <div class="reflection-options" data-qid="reflection_valuable">
+                        <label><input type="radio" name="reflection_valuable" value="The advice about stress"> <span>The
+                                advice about stress</span></label>
+                        <label><input type="radio" name="reflection_valuable" value="The advice about sleep"> <span>The
+                                advice about sleep</span></label>
+                        <label><input type="radio" name="reflection_valuable"
+                                value="The advice about physical activity"> <span>The advice about physical
+                                activity</span></label>
+                        <label><input type="radio" name="reflection_valuable" value="The advice about screen time">
+                            <span>The advice about screen time</span></label>
+                        <label><input type="radio" name="reflection_valuable" value="The advice about hydration">
+                            <span>The advice about hydration</span></label>
+                        <label><input type="radio" name="reflection_valuable" value="The overall personalized feedback">
+                            <span>The overall personalized feedback</span></label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-text"><span class="qnum">10.</span> How would you rate the usefulness of this
+                        well-being assessment? (1 - Not useful, 5 - Very useful)</div>
+                    <div class="rating-group" data-qid="reflection_usefulness" data-min="1" data-max="5"></div>
+                </div>
+
+                <div class="submission-section" style="margin-top:20px;">
+                    <p><i class="fas fa-info-circle" style="color:var(--accent);"></i> Your reflection answers help us
+                        improve the well-being assessment.</p>
+                    <button class="btn-secondary" id="submitReflectionBtn"
+                        style="margin-top:12px; background:var(--btn-primary); border-color:var(--accent); color:white;">
+                        <i class="fas fa-paper-plane"></i> Submit Reflection
+                    </button>
+                    <div id="reflectionFeedback" style="margin-top:12px;"><i class="fas fa-circle-info"></i> Click
+                        "Submit Reflection" to save your feedback.</div>
+                </div>
+            </div>
+
+            <!-- ========== NAVIGATION ========== -->
+            <div class="nav-bar">
+                <button class="nav-btn" id="prevBtn" disabled><i class="fas fa-arrow-left"></i> Previous</button>
+                <span id="pageIndicator" style="color:var(--text-secondary); font-size:18px;">1 / 10</span>
+                <button class="nav-btn primary" id="nextBtn">Next <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div id="navError" style="text-align:center; margin-top:8px;"></div>
+
+        </div> <!-- /sub-main -->
+    </div> <!-- /main -->
+    <script src="/static/js/script.js"></script>
 </body>
 
 </html>
